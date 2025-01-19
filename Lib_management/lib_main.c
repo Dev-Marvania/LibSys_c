@@ -79,9 +79,11 @@ int staff_login()
     return 0;
 }
 
-void add_book() {
+void add_book()
+{
     FILE *file = fopen("books.txt", "a");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("Error opening file for writing.\n");
         exit(EXIT_FAILURE);
     }
@@ -109,24 +111,30 @@ void add_book() {
     printf("Book added successfully.\n");
 }
 
-void delete_book() {
+void delete_book()
+{
     char isbn[20];
     printf("Enter ISBN of the book to delete: ");
     scanf("%s", isbn);
 
     FILE *file = fopen("books.txt", "r");
     FILE *temp = fopen("temp.txt", "w");
-    if (file == NULL || temp == NULL) {
+    if (file == NULL || temp == NULL)
+    {
         printf("Error opening file.\n");
         exit(EXIT_FAILURE);
     }
 
     Book book;
     int found = 0;
-    while (fscanf(file, "%s %s %s %f %d", book.name, book.author, book.isbn, &book.price, &book.available) != EOF) {
-        if (strcmp(book.isbn, isbn) != 0) {
+    while (fscanf(file, "%s %s %s %f %d", book.name, book.author, book.isbn, &book.price, &book.available) != EOF)
+    {
+        if (strcmp(book.isbn, isbn) != 0)
+        {
             fprintf(temp, "%s %s %s %.2f %d\n", book.name, book.author, book.isbn, book.price, book.available);
-        } else {
+        }
+        else
+        {
             found = 1;
         }
     }
@@ -135,12 +143,83 @@ void delete_book() {
     remove("books.txt");
     rename("temp.txt", "books.txt");
 
-    if (found) {
+    if (found)
+    {
         printf("Book deleted successfully.\n");
-    } else {
+    }
+    else
+    {
         printf("Book not found.\n");
     }
 }
 
+void fetch_book()
+{
+    char name[50];
+    printf("Enter book name or author: ");
+    scanf("%s", name);
 
+    FILE *file = fopen("books.txt", "r");
+    if (file == NULL)
+    {
+        printf("Error opening file.\n");
+        exit(EXIT_FAILURE);
+    }
 
+    Book book;
+    int found = 0;
+    while (fscanf(file, "%s %s %s %f %d", book.name, book.author, book.isbn, &book.price, &book.available) != EOF)
+    {
+        if (strcmp(book.name, name) == 0 || strcmp(book.author, name) == 0)
+        {
+            printf("Book found: %s by %s, ISBN: %s, Price: %.2f, Available: %d\n", book.name, book.author, book.isbn, book.price, book.available);
+            found = 1;
+        }
+    }
+
+    fclose(file);
+    if (!found)
+    {
+        printf("Book not found.\n");
+    }
+}
+
+void display_books()
+{
+    FILE *file = fopen("books.txt", "r");
+    if (file == NULL)
+    {
+        printf("Error opening file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Book book;
+    printf("\nList of Books:\n");
+    while (fscanf(file, "%s %s %s %f %d", book.name, book.author, book.isbn, &book.price, &book.available) != EOF)
+    {
+        printf("%s by %s, ISBN: %s, Price: %.2f, Available: %d\n", book.name, book.author, book.isbn, book.price, book.available);
+    }
+
+    fclose(file);
+}
+
+void create_member()
+{
+    FILE *file = fopen("members.txt", "a");
+    if (file == NULL)
+    {
+        printf("Error opening file for writing.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Member member;
+    printf("Enter member name: ");
+    scanf("%s", member.name);
+    printf("Enter contact number: ");
+    scanf("%s", member.contact);
+    strcpy(member.book_isbn, "None");
+
+    fprintf(file, "%s %s %s\n", member.name, member.contact, member.book_isbn);
+    fclose(file);
+    printf("Member created successfully.\n");
+}
