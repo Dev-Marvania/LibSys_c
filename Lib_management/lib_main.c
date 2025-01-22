@@ -311,3 +311,75 @@ void return_book() {
         printf("Member not found.\n");
     }
 }
+int main() {
+    int choice;
+    while (1) {
+        printf("\nLibrary Management System\n");
+        printf("1. Create staff Account\n");
+        printf("2. staff Login\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                create_staff_account();
+                break;
+            case 2:
+                if (staff_login()) {
+                    int logged_in_choice;
+                    while (1) {
+                        printf("\n1. Add Book\n");
+                        printf("2. Delete Book\n");
+                        printf("3. Fetch Book\n");
+                        printf("4. Display All Books\n");
+                        printf("5. Create Member\n");
+                        printf("6. Issue Book\n");
+                        printf("7. Display Issued Books\n");
+                        printf("8. Return Book\n");
+                        printf("9. Logout\n");
+                        printf("Enter your choice: ");
+                        scanf("%d", &logged_in_choice);
+
+                        if (logged_in_choice == 9) break;
+
+                        switch (logged_in_choice) {
+                            case 1:
+                                add_book();
+                                break;
+                            case 2:
+                                delete_book();
+                                break;
+                            case 3:
+                                fetch_book();
+                                break;
+                            case 4:
+                                display_books();
+                                break;
+                            case 5:
+                                create_member();
+                                break;
+                            case 6:
+                                issue_book();
+                                break;
+                            case 7:
+                                display_issued_books();
+                                break;
+                            case 8:
+                                return_book();
+                                break;
+                            default:
+                                printf("Invalid choice.\n");
+                        }
+                    }
+                }
+                break;
+            case 3:
+                exit(0);
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+
+    return 0;
+}
