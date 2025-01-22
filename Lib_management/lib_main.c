@@ -223,3 +223,91 @@ void create_member()
     fclose(file);
     printf("Member created successfully.\n");
 }
+
+void issue_book() {
+    char member_name[50], isbn[20];
+    printf("Enter member name: ");
+    scanf("%s", member_name);
+    printf("Enter ISBN of the book to issue: ");
+    scanf("%s", isbn);
+
+    FILE *file = fopen("members.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    if (file == NULL || temp == NULL) {
+        printf("Error opening file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Member member;
+    int found = 0;
+    while (fscanf(file, "%s %s %s", member.name, member.contact, member.book_isbn) != EOF) {
+        if (strcmp(member.name, member_name) == 0) {
+            strcpy(member.book_isbn, isbn);
+            found = 1;
+        }
+        fprintf(temp, "%s %s %s\n", member.name, member.contact, member.book_isbn);
+    }
+
+    fclose(file);
+    fclose(temp);
+    remove("members.txt");
+    rename("temp.txt", "members.txt");
+
+    if (found) {
+        printf("Book issued successfully.\n");
+    } else {
+        printf("Member not found.\n");
+    }
+}
+
+void display_issued_books() {
+    FILE *file = fopen("members.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Member member;
+    printf("\nIssued Books:\n");
+    while (fscanf(file, "%s %s %s", member.name, member.contact, member.book_isbn) != EOF) {
+        if (strcmp(member.book_isbn, "None") != 0) {
+            printf("Member: %s, Contact: %s, Book ISBN: %s\n", member.name, member.contact, member.book_isbn);
+        }
+    }
+
+    fclose(file);
+}
+
+void return_book() {
+    char member_name[50];
+    printf("Enter member name: ");
+    scanf("%s", member_name);
+
+    FILE *file = fopen("members.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+    if (file == NULL || temp == NULL) {
+        printf("Error opening file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    Member member;
+    int found = 0;
+    while (fscanf(file, "%s %s %s", member.name, member.contact, member.book_isbn) != EOF) {
+        if (strcmp(member.name, member_name) == 0) {
+            strcpy(member.book_isbn, "None");
+            found = 1;
+        }
+        fprintf(temp, "%s %s %s\n", member.name, member.contact, member.book_isbn);
+    }
+
+    fclose(file);
+    fclose(temp);
+    remove("members.txt");
+    rename("temp.txt", "members.txt");
+
+    if (found) {
+        printf("Book returned successfully.\n");
+    } else {
+        printf("Member not found.\n");
+    }
+}
